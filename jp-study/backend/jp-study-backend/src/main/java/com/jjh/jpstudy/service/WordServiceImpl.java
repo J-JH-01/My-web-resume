@@ -20,4 +20,9 @@ public class WordServiceImpl implements WordService {
     public List<Word> selectWordList() {
         return mapper.selectWordList();
     }
+    
+    @Override
+    public Word selectWordDetail(int wordNo) {
+        return mapper.selectWordDetail(wordNo);
+    }
 }

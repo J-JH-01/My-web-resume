@@ -5,6 +5,28 @@
 
 <mapper namespace="com.jjh.jpstudy.mapper.WordMapper">
 
+
+	<!--단어찾기-->
+	<select id="selectWordDetail" resultType="Word">
+	    SELECT
+	        W.WORD_NO AS wordNo,
+	        W.WORD_TEXT AS wordText,
+	        W.FURIGANA AS furigana,
+	        W.PART_OF_SPEECH AS partOfSpeech,
+	        W.JLPT_LEVEL AS jlptLevel,
+	        W.WORD_DESCRIPTION AS wordDescription,
+	        WM.MEANING_TEXT AS meaningText
+	    FROM WORD W
+	    LEFT JOIN WORD_MEANING WM
+	        ON W.WORD_NO = WM.WORD_NO
+	        AND WM.MEANING_ORDER = 1
+	        AND WM.DELETE_FL = 'N'
+	    WHERE W.DELETE_FL = 'N'
+	    AND W.WORD_NO = #{wordNo}
+	</select>
+
+
+	<!-- 값 시험용 테스트-->
     <select id="selectWordList" resultType="Word">
         SELECT
             W.WORD_NO AS wordNo,
@@ -22,5 +44,7 @@
         WHERE W.DELETE_FL = 'N'
         ORDER BY W.WORD_NO
     </select>
+    
+    
 
 </mapper>
