@@ -1,0 +1,139 @@
+.quiz-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.quiz-top-row span {
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: #eef2ff;
+  color: #4f46e5;
+  font-weight: 900;
+}
+
+.quiz-top-row button {
+  border: 0;
+  border-radius: 999px;
+  padding: 8px 13px;
+  background: #ffffff;
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.07);
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.quiz-flip-card {
+  width: 100%;
+  min-height: 300px;
+  border: 0;
+  border-radius: 30px;
+  padding: 28px;
+  background: #ffffff;
+  box-shadow: 0 16px 38px rgba(15, 23, 42, 0.09);
+  display: grid;
+  place-items: center;
+  text-align: center;
+  cursor: pointer;
+}
+
+.quiz-flip-card.flipped {
+  background: #eef2ff;
+}
+
+.quiz-type {
+  display: block;
+  margin-bottom: 12px;
+  color: #4f46e5;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+}
+
+.quiz-flip-card strong {
+  display: block;
+  font-size: 54px;
+  line-height: 1.1;
+}
+
+.quiz-flip-card p {
+  margin: 14px 0 0;
+  color: #64748b;
+  font-size: 17px;
+  font-weight: 800;
+  line-height: 1.45;
+}
+
+.quiz-status-buttons {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 9px;
+  margin-top: 16px;
+}
+
+.quiz-status-buttons button {
+  border: 0;
+  border-radius: 18px;
+  padding: 14px 8px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.quiz-status-buttons button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.quiz-status-buttons .known {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.quiz-status-buttons .vague {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.quiz-status-buttons .unknown {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.quiz-complete-card {
+  min-height: 300px;
+  border-radius: 30px;
+  background: #ffffff;
+  box-shadow: 0 16px 38px rgba(15, 23, 42, 0.09);
+  display: grid;
+  place-items: center;
+  text-align: center;
+  padding: 32px 24px;
+}
+
+.quiz-complete-card span {
+  color: #4f46e5;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+}
+
+.quiz-complete-card h2 {
+  margin: 8px 0 0;
+  font-size: 30px;
+}
+
+.quiz-complete-card p {
+  margin: 8px 0 18px;
+  color: #64748b;
+  font-weight: 800;
+}
+
+.quiz-complete-card button {
+  border: 0;
+  border-radius: 999px;
+  padding: 12px 18px;
+  background: #4f46e5;
+  color: #ffffff;
+  font-weight: 900;
+  cursor: pointer;
+}

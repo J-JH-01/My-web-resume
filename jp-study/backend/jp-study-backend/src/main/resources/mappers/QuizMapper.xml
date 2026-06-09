@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jjh.jpstudy.mapper.QuizMapper">
+
+    <select id="selectRandomQuizList" parameterType="int" resultType="com.jjh.jpstudy.dto.Quiz">
+        SELECT *
+        FROM (
+            SELECT Q.*
+            FROM (
+                SELECT
+                    'WORD' AS quizType,
+                    W.WORD_NO AS itemNo,
+                    W.WORD_TEXT AS questionText,
+                    W.FURIGANA AS readingText,
+                    WM.MEANING_TEXT AS answerText,
+                    W.WORD_DESCRIPTION AS description
+                FROM WORD W
+                JOIN WORD_MEANING WM
+                    ON W.WORD_NO = WM.WORD_NO
+                WHERE W.DELETE_FL = 'N'
+                  AND WM.DELETE_FL = 'N'
+                  AND WM.MEANING_ORDER = 1
+
+                UNION ALL
+
+                SELECT
+                    'KANJI' AS quizType,
+                    K.KANJI_NO AS itemNo,
+                    K.KANJI_TEXT AS questionText,
+                    K.ON_READING || ' / ' || K.KUN_READING AS readingText,
+                    K.MEANING_TEXT AS answerText,
+                    K.DESCRIPTION AS description
+                FROM KANJI K
+                WHERE K.DELETE_FL = 'N'
+            ) Q
+            ORDER BY DBMS_RANDOM.VALUE
+        )
+        WHERE ROWNUM &lt;= #{limit}
+    </select>
+
+</mapper>

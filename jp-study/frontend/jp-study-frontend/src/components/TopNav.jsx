@@ -1,7 +1,16 @@
 import { useNavigate } from "react-router-dom";
 
-function TopNav({ onMenuClick }) {
+function TopNav({ onMenuClick, loginMember }) {
   const navigate = useNavigate();
+
+  const moveProfilePage = () => {
+    if (loginMember) {
+      navigate("/my-page");
+      return;
+    }
+
+    navigate("/login");
+  };
 
   return (
     <header className="top-nav">
@@ -25,10 +34,12 @@ function TopNav({ onMenuClick }) {
       <button
         className="top-profile-button"
         type="button"
-        onClick={() => navigate("/my-page")}
-        aria-label="마이페이지"
+        onClick={moveProfilePage}
+        aria-label="프로필"
       >
-        <span>J</span>
+        <span>
+          {loginMember ? loginMember.memberNickname.charAt(0) : "?"}
+        </span>
       </button>
     </header>
   );

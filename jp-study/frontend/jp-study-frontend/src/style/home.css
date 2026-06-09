@@ -1,0 +1,73 @@
+.home-card {
+  border: 1px solid #edf0f6;
+  border-radius: 22px;
+  background: #fff;
+  box-shadow: 0 8px 22px rgba(17, 24, 39, 0.06);
+  padding: 18px;
+}
+
+.home-card-title strong {
+  display: block;
+  font-size: 15px;
+  font-weight: 900;
+}
+
+.home-card-title span {
+  display: block;
+  margin-top: 4px;
+  color: #8a909d;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.main-progress {
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  padding: 18px 0;
+}
+
+.donut {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background: conic-gradient(#6d56e9 90deg, #dcdde4 0deg);
+  display: grid;
+  place-items: center;
+}
+
+.donut > div {
+  width: 108px;
+  height: 108px;
+  border-radius: 50%;
+  background: #fff;
+  display: grid;
+  place-items: center;
+  align-content: center;
+}
+
+.donut strong {
+  font-size: 30px;
+  font-weight: 900;
+}
+
+.donut span {
+  color: #6b7280;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.mini-progress-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.mini-progress-grid div {
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: #64748b;
+  font-weight: 800;
+}

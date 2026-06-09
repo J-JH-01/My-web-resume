@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jjh.jpstudy.mapper.KanjiMapper">
+
+    <select id="selectKanjiList" resultType="com.jjh.jpstudy.dto.Kanji">
+        SELECT
+            KANJI_NO AS kanjiNo,
+            KANJI_TEXT AS kanjiText,
+            ON_READING AS onReading,
+            KUN_READING AS kunReading,
+            MEANING_TEXT AS meaningText,
+            DESCRIPTION AS description
+        FROM KANJI
+        WHERE DELETE_FL = 'N'
+        ORDER BY KANJI_NO
+    </select>
+
+    <select id="selectKanji" parameterType="int" resultType="com.jjh.jpstudy.dto.Kanji">
+        SELECT
+            K.KANJI_NO AS kanjiNo,
+            K.KANJI_TEXT AS kanjiText,
+            K.ON_READING AS onReading,
+            K.KUN_READING AS kunReading,
+            K.MEANING_TEXT AS meaningText,
+            K.DESCRIPTION AS description,
+            E.EXAMPLE_TEXT AS exampleText,
+            E.EXAMPLE_READING AS exampleReading,
+            E.EXAMPLE_MEANING AS exampleMeaning
+        FROM KANJI K
+        LEFT JOIN KANJI_EXAMPLE E
+            ON K.KANJI_NO = E.KANJI_NO
+           AND E.EXAMPLE_NO = (
+                SELECT MIN(EXAMPLE_NO)
+                FROM KANJI_EXAMPLE
+                WHERE KANJI_NO = K.KANJI_NO
+           )
+        WHERE K.KANJI_NO = #{kanjiNo}
+          AND K.DELETE_FL = 'N'
+    </select>
+
+</mapper>

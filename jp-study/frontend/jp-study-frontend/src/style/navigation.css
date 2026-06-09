@@ -1,0 +1,124 @@
+.top-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  width: 100%;
+  height: 62px;
+  display: grid;
+  grid-template-columns: 52px 1fr 52px;
+  align-items: center;
+  padding: 0 14px;
+  background: rgba(255, 255, 255, 0.94);
+  border-bottom: 1px solid #e5e7eb;
+  backdrop-filter: blur(12px);
+}
+
+.top-menu-button,
+.top-logo-button,
+.top-profile-button {
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.top-menu-button {
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+  font-size: 25px;
+  line-height: 1;
+}
+
+.top-logo-button {
+  justify-self: center;
+  color: #4f46e5;
+  font-size: 18px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+}
+
+.top-profile-button {
+  justify-self: end;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border-radius: 50%;
+  background: #4f46e5;
+  color: #fff;
+  font-weight: 900;
+  display: grid;
+  place-items: center;
+}
+
+.menu-layer {
+  position: fixed;
+  z-index: 90;
+  top: 62px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: transparent;
+}
+
+.menu-popover {
+  width: 210px;
+  margin: 10px 0 0 12px;
+  padding: 10px;
+  border-radius: 22px;
+  background: #fff;
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.22);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.menu-popover-item {
+  width: 100%;
+  min-height: 58px;
+  border: 0;
+  border-radius: 17px;
+  padding: 8px 10px;
+  background: #f8fafc;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  text-align: left;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.menu-popover-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 15px;
+  display: grid;
+  place-items: center;
+  font-size: 22px;
+  font-weight: 900;
+}
+
+.menu-popover-icon.blue {
+  background: #dbeafe;
+  color: #2563eb;
+}
+
+.menu-popover-icon.pink {
+  background: #fae8ff;
+  color: #c026d3;
+}
+
+.menu-popover-icon.green {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.menu-popover-icon.orange {
+  background: #ffedd5;
+  color: #c2410c;
+}
+
+.menu-popover-icon.red {
+  background: #fee2e2;
+  color: #e11d48;
+}

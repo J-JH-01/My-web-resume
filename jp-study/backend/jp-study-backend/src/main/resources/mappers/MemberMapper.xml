@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jjh.jpstudy.mapper.MemberMapper">
+
+    <select id="checkMemberId" parameterType="string" resultType="int">
+        SELECT COUNT(*)
+        FROM STUDY_MEMBER
+        WHERE MEMBER_ID = #{memberId}
+          AND DELETE_FL = 'N'
+    </select>
+
+    <insert id="insertMember" parameterType="com.jjh.jpstudy.dto.Member">
+        INSERT INTO STUDY_MEMBER (
+            MEMBER_NO,
+            MEMBER_ID,
+            MEMBER_PW,
+            MEMBER_NICKNAME,
+            MEMBER_ROLE,
+            ENROLL_DATE,
+            DELETE_FL
+        ) VALUES (
+            SEQ_MEMBER_NO.NEXTVAL,
+            #{memberId},
+            #{memberPw},
+            #{memberNickname},
+            DEFAULT,
+            DEFAULT,
+            DEFAULT
+        )
+    </insert>
+    
+    <select id="selectMemberById" parameterType="string" resultType="com.jjh.jpstudy.dto.Member">
+    SELECT
+        MEMBER_NO AS memberNo,
+        MEMBER_ID AS memberId,
+        MEMBER_PW AS memberPw,
+        MEMBER_NICKNAME AS memberNickname,
+        MEMBER_ROLE AS memberRole,
+        TO_CHAR(ENROLL_DATE, 'YYYY-MM-DD') AS enrollDate,
+        DELETE_FL AS deleteFl
+    FROM STUDY_MEMBER
+    WHERE MEMBER_ID = #{memberId}
+      AND DELETE_FL = 'N'
+	</select>
+
+</mapper>

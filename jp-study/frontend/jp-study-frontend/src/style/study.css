@@ -1,0 +1,157 @@
+.word-list {
+  display: grid;
+  gap: 12px;
+}
+
+.word-list-item {
+  position: relative;
+  width: 100%;
+  border: 0;
+  border-radius: 22px;
+  padding: 16px 18px;
+  background: #ffffff;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.07);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  text-align: left;
+  cursor: pointer;
+}
+
+.word-list-item div {
+  display: grid;
+  gap: 4px;
+}
+
+.word-list-item strong {
+  font-size: 22px;
+  font-weight: 900;
+}
+
+.word-list-item div span {
+  color: #6b7280;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.word-list-item p {
+  margin: 0;
+  color: #374151;
+  font-weight: 800;
+}
+
+.kanji-card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.kanji-list-card {
+  position: relative;
+  min-height: 112px;
+  border: 0;
+  border-radius: 22px;
+  padding: 12px 8px;
+  background: #ffffff;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.07);
+  display: grid;
+  place-items: center;
+  gap: 5px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.kanji-list-card strong {
+  font-size: 38px;
+  line-height: 1;
+  font-weight: 900;
+}
+
+.kanji-list-card > span:not(.study-status-dot) {
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.study-detail-card {
+  padding: 30px 22px;
+  border-radius: 30px;
+  background: #ffffff;
+  box-shadow: 0 16px 38px rgba(15, 23, 42, 0.08);
+  text-align: center;
+}
+
+.detail-label {
+  color: #4f46e5;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+}
+
+.study-detail-card h1 {
+  margin: 10px 0 6px;
+  font-size: 64px;
+  line-height: 1.05;
+}
+
+.detail-reading {
+  margin: 0 0 12px;
+  color: #64748b;
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.detail-meaning {
+  display: block;
+  margin-bottom: 18px;
+  font-size: 23px;
+}
+
+.example-box {
+  margin-top: 10px;
+  padding: 17px;
+  border-radius: 22px;
+  background: #f8fafc;
+}
+
+.example-box p {
+  margin: 0 0 8px;
+  font-weight: 900;
+}
+
+.example-box span {
+  color: #64748b;
+  font-size: 14px;
+}
+
+.detail-info-list {
+  margin-top: 14px;
+  display: grid;
+  gap: 12px;
+  text-align: left;
+}
+
+.detail-info-list div {
+  padding: 16px;
+  border-radius: 20px;
+  background: #f8fafc;
+}
+
+.detail-info-list span {
+  display: block;
+  margin-bottom: 5px;
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.detail-info-list strong {
+  display: block;
+}
+
+.detail-info-list p {
+  margin: 5px 0 0;
+  color: #64748b;
+  font-size: 14px;
+}

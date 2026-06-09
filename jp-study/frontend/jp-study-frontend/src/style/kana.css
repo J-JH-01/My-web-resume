@@ -1,0 +1,71 @@
+.segment-control {
+  height: 36px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 4px;
+  margin: 0 40px 16px;
+  padding: 3px;
+  border-radius: 999px;
+  background: #eff0f5;
+}
+
+.segment-control button {
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.segment-control button.active {
+  background: #5b43e8;
+  color: #fff;
+}
+
+.kana-table {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.kana-row {
+  display: grid;
+  grid-template-columns: 34px repeat(5, 1fr);
+  gap: 8px;
+  align-items: center;
+}
+
+.kana-row-label {
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 900;
+  text-align: center;
+}
+
+.kana-header-cell {
+  color: #4f46e5;
+  font-size: 13px;
+  font-weight: 900;
+  text-align: center;
+}
+
+.kana-cell {
+  min-height: 48px;
+  border: 1px solid #edf0f6;
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 6px 14px rgba(17, 24, 39, 0.05);
+  display: grid;
+  place-items: center;
+  font-size: 22px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.kana-cell.empty {
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
+  cursor: default;
+}

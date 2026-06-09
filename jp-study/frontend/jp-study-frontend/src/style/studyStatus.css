@@ -1,0 +1,52 @@
+.study-status-dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 999px;
+  flex-shrink: 0;
+}
+
+.study-status-dot.known {
+  background: #22c55e;
+}
+
+.study-status-dot.vague {
+  background: #f59e0b;
+}
+
+.study-status-dot.unknown {
+  background: #ef4444;
+}
+
+.word-list-item .study-status-dot {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+}
+
+.kanji-list-card .study-status-dot {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.word-list-item.studied strong,
+.kanji-list-card.studied strong {
+  color: #94a3b8;
+}
+
+.word-list-item.studied div span,
+.word-list-item.studied p,
+.kanji-list-card.studied > span:not(.study-status-dot) {
+  color: #cbd5e1;
+}
+
+.word-list-item:not(.studied) strong,
+.kanji-list-card:not(.studied) strong {
+  color: #0f172a;
+}
+
+.word-list-item.studied,
+.kanji-list-card.studied {
+  background: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 6px 14px rgba(15, 23, 42, 0.035);
+}

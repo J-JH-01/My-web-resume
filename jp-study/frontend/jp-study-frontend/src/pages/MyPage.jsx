@@ -1,80 +1,153 @@
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { profileImage } from "../data/mockData.js";
+import PageHeader from "../components/PageHeader.jsx";
 
-function MyPage() {
+function MyPage({ loginMember, setLoginMember }) {
   const navigate = useNavigate();
+
+  const [statusCount, setStatusCount] = useState({
+    known: 0,
+    vague: 0,
+    unknown: 0,
+  });
+
+  useEffect(() => {
+    if (!loginMember) return;
+
+    fetch("/api/study-status", {
+      credentials: "include",
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("학습 상태 조회 실패");
+        }
+
+        return res.json();
+      })
+      .then((statusList) => {
+        const nextCount = {
+          known: 0,
+          vague: 0,
+          unknown: 0,
+        };
+
+        statusList.forEach((status) => {
+          if (status.studyStatus === "KNOWN") {
+            nextCount.known += 1;
+          }
+
+          if (status.studyStatus === "VAGUE") {
+            nextCount.vague += 1;
+          }
+
+          if (status.studyStatus === "UNKNOWN") {
+            nextCount.unknown += 1;
+          }
+        });
+
+        setStatusCount(nextCount);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, [loginMember]);
+
+  const logout = () => {
+    fetch("/api/auth/logout", {
+      method: "POST",
+      credentials: "include",
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("로그아웃 실패");
+        }
+
+        return res.text();
+      })
+      .then((text) => {
+        localStorage.removeItem("loginMember");
+
+        if (setLoginMember) {
+          setLoginMember(null);
+        }
+
+        alert(text || "로그아웃되었습니다.");
+        navigate("/");
+      })
+      .catch((error) => {
+        console.error(error);
+        alert("로그아웃 중 오류가 발생했습니다.");
+      });
+  };
+
+  if (!loginMember) {
+    return (
+      <div className="phone-page">
+        <PageHeader title="마이페이지" />
+
+        <main className="page-content">
+          <section className="my-card">
+            <h2>로그인이 필요합니다.</h2>
+            <p>학습 기록을 확인하려면 로그인해주세요.</p>
+
+            <button type="button" onClick={() => navigate("/login")}>
+              로그인하러 가기
+            </button>
+          </section>
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="phone-page">
-      <section className="my-hero">
-        <button type="button" onClick={() => navigate(-1)}>
-          ‹
-        </button>
+      <PageHeader title="마이페이지" />
 
-        <div className="my-profile">
-          <img src={profileImage} alt="프로필" />
+      <main className="page-content">
+        <section className="my-profile-card">
+          <div className="my-profile-icon">
+            {loginMember.memberNickname.charAt(0)}
+          </div>
+
           <div>
-            <h1>홍길동</h1>
-            <p>
-              Lv.7 <span>학습자</span>
-            </p>
+            <h2>{loginMember.memberNickname}</h2>
+            <p>{loginMember.memberId}</p>
           </div>
-        </div>
-      </section>
-
-      <main className="my-content">
-        <section className="white-card">
-          <h2>나의 학습 통계</h2>
-
-          <dl>
-            <div>
-              <dt>총 학습일</dt>
-              <dd>12일</dd>
-            </div>
-            <div>
-              <dt>총 학습 단어</dt>
-              <dd>320개</dd>
-            </div>
-            <div>
-              <dt>총 학습 한자</dt>
-              <dd>85개</dd>
-            </div>
-            <div>
-              <dt>연속 학습</dt>
-              <dd>3일</dd>
-            </div>
-          </dl>
         </section>
 
-        <section className="white-card">
-          <h2>퀴즈 상태</h2>
+        <section className="my-section">
+          <h3>퀴즈 상태</h3>
 
-          <div className="quiz-status-grid">
-            <div className="known">
-              <span>알았어요</span>
-              <strong>7</strong>
+          <div className="my-status-grid">
+            <div className="my-status-box known-box">
+              <span className="study-status-dot known" />
+              <strong>{statusCount.known}</strong>
+              <p>맞춤</p>
             </div>
-            <div className="vague">
-              <span>헷갈려요</span>
-              <strong>2</strong>
+
+            <div className="my-status-box vague-box">
+              <span className="study-status-dot vague" />
+              <strong>{statusCount.vague}</strong>
+              <p>애매함</p>
             </div>
-            <div className="unknown">
-              <span>몰라요</span>
-              <strong>1</strong>
+
+            <div className="my-status-box unknown-box">
+              <span className="study-status-dot unknown" />
+              <strong>{statusCount.unknown}</strong>
+              <p>모름</p>
             </div>
           </div>
         </section>
 
-        <section className="my-menu-card">
-          <button type="button">
-            <span>★</span>
-            즐겨찾기
-            <em>›</em>
-          </button>
-          <button type="button">
-            <span>⚙</span>
+        <section className="my-section">
+          <h3>회원정보</h3>
+
+          <button className="my-action-button" type="button">
             회원정보 수정
-            <em>›</em>
+          </button>
+
+          <button className="my-logout-button" type="button" onClick={logout}>
+            로그아웃
           </button>
         </section>
       </main>

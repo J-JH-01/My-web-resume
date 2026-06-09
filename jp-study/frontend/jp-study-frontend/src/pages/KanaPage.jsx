@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import PageHeader from "../components/PageHeader.jsx";
-import { hiraganaRows, katakanaRows } from "../data/mockData.js";
+import {
+  hiraganaRows,
+  katakanaRows,
+  kanaColumnHeaders,
+} from "../data/mockData.js";
 
 function KanaPage({ type = "hiragana" }) {
   const [mode, setMode] = useState(type);
@@ -34,18 +38,39 @@ function KanaPage({ type = "hiragana" }) {
           </button>
         </div>
 
-        <div className="kana-grid">
-          {rows.map((row, rowIndex) =>
-            row.map((kana, index) =>
-              kana ? (
-                <button className="kana-cell" type="button" key={`${kana}-${rowIndex}-${index}`}>
-                  {kana}
-                </button>
-              ) : (
-                <span className="kana-cell empty" key={`empty-${rowIndex}-${index}`} />
-              )
-            )
-          )}
+        <div className="kana-table">
+          <div className="kana-row kana-header-row">
+            <div className="kana-row-label"></div>
+
+            {kanaColumnHeaders.map((header) => (
+              <div className="kana-header-cell" key={header}>
+                {header}
+              </div>
+            ))}
+          </div>
+
+          {rows.map((row) => (
+            <div className="kana-row" key={row.rowLabel}>
+              <div className="kana-row-label">{row.rowLabel}</div>
+
+              {row.cells.map((kana, index) =>
+                kana ? (
+                  <button
+                    className="kana-cell"
+                    type="button"
+                    key={`${row.rowLabel}-${kana}-${index}`}
+                  >
+                    {kana}
+                  </button>
+                ) : (
+                  <span
+                    className="kana-cell empty"
+                    key={`${row.rowLabel}-empty-${index}`}
+                  />
+                )
+              )}
+            </div>
+          ))}
         </div>
       </main>
     </div>

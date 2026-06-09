@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jjh.jpstudy.mapper.StudyStatusMapper">
+
+    <insert id="mergeStudyStatus" parameterType="com.jjh.jpstudy.dto.StudyStatus">
+        MERGE INTO STUDY_STATUS S
+        USING (
+            SELECT
+                #{memberNo} AS MEMBER_NO,
+                #{contentType} AS CONTENT_TYPE,
+                #{contentNo} AS CONTENT_NO
+            FROM DUAL
+        ) T
+        ON (
+            S.MEMBER_NO = T.MEMBER_NO
+            AND S.CONTENT_TYPE = T.CONTENT_TYPE
+            AND S.CONTENT_NO = T.CONTENT_NO
+        )
+        WHEN MATCHED THEN
+            UPDATE SET
+                S.STUDY_STATUS = #{studyStatus},
+                S.UPDATED_AT = SYSDATE,
+                S.DELETE_FL = 'N'
+        WHEN NOT MATCHED THEN
+            INSERT (
+                STATUS_NO,
+                MEMBER_NO,
+                CONTENT_TYPE,
+                CONTENT_NO,
+                STUDY_STATUS,
+                CREATED_AT,
+                UPDATED_AT,
+                DELETE_FL
+            )
+            VALUES (
+                SEQ_STUDY_STATUS_NO.NEXTVAL,
+                #{memberNo},
+                #{contentType},
+                #{contentNo},
+                #{studyStatus},
+                SYSDATE,
+                NULL,
+                'N'
+            )
+    </insert>
+
+    <select id="selectMyStudyStatusList"
+            parameterType="int"
+            resultType="com.jjh.jpstudy.dto.StudyStatus">
+        SELECT
+            STATUS_NO AS statusNo,
+            MEMBER_NO AS memberNo,
+            CONTENT_TYPE AS contentType,
+            CONTENT_NO AS contentNo,
+            STUDY_STATUS AS studyStatus,
+            TO_CHAR(CREATED_AT, 'YYYY-MM-DD HH24:MI:SS') AS createdAt,
+            TO_CHAR(UPDATED_AT, 'YYYY-MM-DD HH24:MI:SS') AS updatedAt,
+            DELETE_FL AS deleteFl
+        FROM STUDY_STATUS
+        WHERE MEMBER_NO = #{memberNo}
+          AND DELETE_FL = 'N'
+    </select>
+
+</mapper>
