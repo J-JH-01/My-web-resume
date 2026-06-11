@@ -18,8 +18,12 @@
 .top-logo-button,
 .top-profile-button {
   border: 0;
-  background: transparent;
   cursor: pointer;
+}
+
+.top-menu-button,
+.top-logo-button {
+  background: transparent;
 }
 
 .top-menu-button {
@@ -49,6 +53,22 @@
   font-weight: 900;
   display: grid;
   place-items: center;
+  overflow: hidden;
+}
+
+.top-profile-button span {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+}
+
+.top-profile-image {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
 }
 
 .menu-layer {

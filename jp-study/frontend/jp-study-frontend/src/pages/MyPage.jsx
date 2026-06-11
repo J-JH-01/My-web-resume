@@ -52,6 +52,50 @@ function MyPage({ loginMember, setLoginMember }) {
       });
   }, [loginMember]);
 
+  const uploadProfileImage = async (e) => {
+    const file = e.target.files[0];
+
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("profileImage", file);
+
+    try {
+      const res = await fetch("/api/members/me/profile-image", {
+        method: "POST",
+        credentials: "include",
+        body: formData,
+      });
+
+      const text = await res.text();
+
+      if (res.status === 401) {
+        alert("로그인이 필요합니다.");
+        navigate("/login");
+        return;
+      }
+
+      if (!res.ok) {
+        throw new Error(text || "프로필 이미지 업로드 실패");
+      }
+
+      const updatedMember = JSON.parse(text);
+
+      localStorage.setItem("loginMember", JSON.stringify(updatedMember));
+
+      if (setLoginMember) {
+        setLoginMember(updatedMember);
+      }
+
+      alert("프로필 이미지가 변경되었습니다.");
+    } catch (error) {
+      console.error(error);
+      alert(error.message);
+    } finally {
+      e.target.value = "";
+    }
+  };
+
   const logout = () => {
     fetch("/api/auth/logout", {
       method: "POST",
@@ -105,9 +149,30 @@ function MyPage({ loginMember, setLoginMember }) {
 
       <main className="page-content">
         <section className="my-profile-card">
-          <div className="my-profile-icon">
-            {loginMember.memberNickname.charAt(0)}
-          </div>
+         <div className="my-profile-image-box">
+          <label className="my-profile-image-label">
+            {loginMember.profileImg ? (
+              <img
+                src={loginMember.profileImg}
+                alt="프로필 이미지"
+                className="my-profile-image"
+              />
+            ) : (
+              <div className="my-profile-placeholder">
+                {loginMember.memberNickname?.charAt(0) || "?"}
+              </div>
+            )}
+
+            <span className="profile-image-overlay">변경</span>
+
+            <input
+              type="file"
+              accept="image/*"
+              onChange={uploadProfileImage}
+              hidden
+            />
+          </label>
+        </div>
 
           <div>
             <h2>{loginMember.memberNickname}</h2>
@@ -142,7 +207,11 @@ function MyPage({ loginMember, setLoginMember }) {
         <section className="my-section">
           <h3>회원정보</h3>
 
-          <button className="my-action-button" type="button">
+          <button
+            className="my-action-button"
+            type="button"
+            onClick={() => navigate("/my-page/edit")}
+          >
             회원정보 수정
           </button>
 

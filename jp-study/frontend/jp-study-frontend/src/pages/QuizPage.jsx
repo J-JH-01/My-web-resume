@@ -3,18 +3,36 @@ import { useNavigate } from "react-router-dom";
 import PageHeader from "../components/PageHeader.jsx";
 
 function QuizPage() {
+  const navigate = useNavigate();
+
   const [quizList, setQuizList] = useState([]);
   const [quizIndex, setQuizIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
-  const [statusMap, setStatusMap] = useState({});
+  const [complete, setComplete] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [errorMessage, setErrorMessage] = useState("");
-  const navigate = useNavigate();
   const [saving, setSaving] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const [sessionResult, setSessionResult] = useState({
+    KNOWN: 0,
+    VAGUE: 0,
+    UNKNOWN: 0,
+  });
 
   const currentQuiz = quizList[quizIndex];
 
-  useEffect(() => {
+  const reloadQuiz = () => {
+    setLoading(true);
+    setErrorMessage("");
+    setFlipped(false);
+    setComplete(false);
+    setQuizIndex(0);
+    setSessionResult({
+      KNOWN: 0,
+      VAGUE: 0,
+      UNKNOWN: 0,
+    });
+
     fetch("/api/quiz?limit=10")
       .then((res) => {
         if (!res.ok) {
@@ -33,79 +51,62 @@ function QuizPage() {
       .finally(() => {
         setLoading(false);
       });
+  };
+
+  useEffect(() => {
+    reloadQuiz();
   }, []);
-const saveStatusAndNext = async (studyStatus) => {
-  if (!currentQuiz || saving) return;
 
-  setSaving(true);
+  const saveStatusAndNext = async (studyStatus) => {
+    if (!currentQuiz || saving) return;
 
-  try {
-    const res = await fetch("/api/study-status", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json; charset=UTF-8",
-      },
-      credentials: "include",
-      body: JSON.stringify({
-        contentType: currentQuiz.quizType,
-        contentNo: currentQuiz.itemNo,
-        studyStatus,
-      }),
-    });
+    setSaving(true);
 
-    const text = await res.text();
-
-    if (res.status === 401) {
-      alert("로그인이 필요합니다.");
-      navigate("/login");
-      return;
-    }
-
-    if (!res.ok) {
-      throw new Error(text || "학습 상태 저장 실패");
-    }
-
-    setFlipped(false);
-
-    if (quizIndex + 1 >= quizList.length) {
-      setComplete(true);
-      return;
-    }
-
-    setQuizIndex((prev) => prev + 1);
-  } catch (error) {
-    console.error(error);
-    alert(error.message);
-  } finally {
-    setSaving(false);
-  }
-};
-
-  const reloadQuiz = () => {
-    setLoading(true);
-    setErrorMessage("");
-    setFlipped(false);
-    setQuizIndex(0);
-    setStatusMap({});
-
-    fetch("/api/quiz?limit=10")
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("퀴즈 재조회 실패");
-        }
-
-        return res.json();
-      })
-      .then((data) => {
-        setQuizList(data);
-      })
-      .catch((error) => {
-        console.error(error);
-        setErrorMessage("퀴즈를 다시 불러오지 못했습니다.");
-      })
-      .finally(() => {
-        setLoading(false);
+    try {
+      const res = await fetch("/api/study-status", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json; charset=UTF-8",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          contentType: currentQuiz.quizType,
+          contentNo: currentQuiz.itemNo,
+          studyStatus,
+        }),
       });
+
+      const text = await res.text();
+
+      if (res.status === 401) {
+        alert("로그인이 필요합니다.");
+        navigate("/login");
+        return;
+      }
+
+      if (!res.ok) {
+        throw new Error(text || "학습 상태 저장 실패");
+      }
+
+      setSessionResult((prev) => ({
+        ...prev,
+        [studyStatus]: prev[studyStatus] + 1,
+      }));
+
+      setFlipped(false);
+
+      if (quizIndex + 1 >= quizList.length) {
+        setComplete(true);
+        return;
+      }
+
+      setQuizIndex((prev) => prev + 1);
+    } catch (error) {
+      console.error(error);
+      alert(error.message);
+    } finally {
+      setSaving(false);
+    }
   };
 
   if (loading) {
@@ -128,6 +129,43 @@ const saveStatusAndNext = async (studyStatus) => {
           <button type="button" onClick={reloadQuiz}>
             다시 불러오기
           </button>
+        </main>
+      </div>
+    );
+  }
+
+  if (complete) {
+    return (
+      <div className="phone-page">
+        <PageHeader title="퀴즈" />
+
+        <main className="page-content">
+          <section className="quiz-complete-card">
+            <span>COMPLETE</span>
+            <h2>퀴즈 완료</h2>
+            <p>{quizList.length}개 문제를 모두 확인했습니다.</p>
+
+            <div className="quiz-result-grid">
+              <div className="known-result">
+                <strong>{sessionResult.KNOWN}</strong>
+                <p>맞춤</p>
+              </div>
+
+              <div className="vague-result">
+                <strong>{sessionResult.VAGUE}</strong>
+                <p>애매함</p>
+              </div>
+
+              <div className="unknown-result">
+                <strong>{sessionResult.UNKNOWN}</strong>
+                <p>모름</p>
+              </div>
+            </div>
+
+            <button type="button" onClick={reloadQuiz}>
+              새 문제 풀기
+            </button>
+          </section>
         </main>
       </div>
     );

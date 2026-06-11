@@ -58,3 +58,9 @@
   font-size: 14px;
   font-weight: 800;
 }
+
+.auth-form input:disabled {
+  background: #f1f5f9;
+  color: #94a3b8;
+  cursor: not-allowed;
+}

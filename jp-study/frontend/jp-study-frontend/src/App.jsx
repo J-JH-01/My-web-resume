@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 
 import "./style/App.css";
 
@@ -16,11 +16,15 @@ import KanjiDetailPage from "./pages/KanjiDetailPage.jsx";
 import QuizPage from "./pages/QuizPage.jsx";
 import SignupPage from "./pages/SignupPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
-
+import MemberEditPage from "./pages/MemberEditPage.jsx";
+import AdminStudyItemPage from "./pages/AdminStudyItemPage.jsx";
 
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [loginMember, setLoginMember] = useState(null);
+
+  const location = useLocation();
+  const isAdminPage = location.pathname.startsWith("/admin");
 
   useEffect(() => {
     fetch("/api/auth/me", {
@@ -54,17 +58,30 @@ function App() {
 
       <MenuDrawer isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
 
-      <main className="app-main">
+      <main className={isAdminPage ? "app-main admin-app-main" : "app-main"}>
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/login" element={<LoginPage />} />
+          <Route
+              path="/admin/study-items"
+              element={<AdminStudyItemPage loginMember={loginMember} />}
+            />
 
           <Route path="/hiragana" element={<KanaPage type="hiragana" />} />
           <Route path="/katakana" element={<KanaPage type="katakana" />} />
           <Route
             path="/my-page"
             element={<MyPage loginMember={loginMember} setLoginMember={setLoginMember} />}
+          />
+          <Route
+            path="/my-page/edit"
+            element={
+              <MemberEditPage
+                loginMember={loginMember}
+                setLoginMember={setLoginMember}
+              />
+            }
           />
 
           <Route path="/words" element={<WordListPage />} />

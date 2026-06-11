@@ -12,4 +12,10 @@ public interface MemberMapper {
     int insertMember(Member member);
 
     Member selectMemberById(String memberId);
+
+    Member selectMemberByNo(int memberNo);
+
+    int updateMemberInfo(Member member);
+
+    int updateProfileImage(Member member);
 }

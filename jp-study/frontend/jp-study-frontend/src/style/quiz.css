@@ -137,3 +137,46 @@
   font-weight: 900;
   cursor: pointer;
 }
+
+.quiz-result-grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 9px;
+  margin: 4px 0 20px;
+}
+
+.quiz-result-grid div {
+  min-height: 72px;
+  border-radius: 18px;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 3px;
+}
+
+.quiz-result-grid strong {
+  font-size: 23px;
+  font-weight: 900;
+}
+
+.quiz-result-grid p {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.known-result {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.vague-result {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.unknown-result {
+  background: #fee2e2;
+  color: #991b1b;
+}

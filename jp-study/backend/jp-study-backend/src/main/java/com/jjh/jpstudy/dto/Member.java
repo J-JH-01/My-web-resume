@@ -16,4 +16,9 @@ public class Member {
     private String memberRole;
     private String enrollDate;
     private String deleteFl;
+    private String profileImg;
+
+    // 회원정보 수정용
+    private String currentPw;
+    private String newPw;
 }

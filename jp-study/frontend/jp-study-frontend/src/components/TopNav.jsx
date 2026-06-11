@@ -32,15 +32,22 @@ function TopNav({ onMenuClick, loginMember }) {
       </button>
 
       <button
-        className="top-profile-button"
-        type="button"
-        onClick={moveProfilePage}
-        aria-label="프로필"
-      >
-        <span>
-          {loginMember ? loginMember.memberNickname.charAt(0) : "?"}
-        </span>
-      </button>
+          className="top-profile-button"
+          type="button"
+          onClick={() => navigate(loginMember ? "/my-page" : "/login")}
+        >
+          {loginMember?.profileImg ? (
+            <img
+              src={loginMember.profileImg}
+              alt="프로필 이미지"
+              className="top-profile-image"
+            />
+          ) : (
+            <span>
+              {loginMember?.memberNickname?.charAt(0) || "?"}
+            </span>
+          )}
+        </button>
     </header>
   );
 }
