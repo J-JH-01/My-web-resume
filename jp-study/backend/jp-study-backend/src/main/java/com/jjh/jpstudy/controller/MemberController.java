@@ -34,10 +34,10 @@ public class MemberController {
         }
 
         if (result > 0) {
-            return ResponseEntity.ok("회원가입 성공");
+            return ResponseEntity.ok("회원가입 되었습니다");
         }
 
-        return ResponseEntity.internalServerError().body("회원가입 실패");
+        return ResponseEntity.internalServerError().body("회원가입에 실패하였습니다");
     }
     
     @PutMapping("/me")
