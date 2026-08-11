@@ -1,11 +1,47 @@
 <!doctype html>
-<html lang="en">
+<html lang="ko">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- 파비콘 -->
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="/favicon-16x16.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="/apple-touch-icon.png"
+    />
+
+    <!-- 모바일 화면 설정 -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>jp-study-frontend</title>
+
+    <!-- 사이트 기본 정보 -->
+    <title>JP STUDY | 일본어 학습</title>
+    <meta
+      name="description"
+      content="일본어 단어와 한자 학습용 사이트"
+    />
+
+    <!-- 링크 공유 시 표시되는 정보 -->
+    <meta property="og:title" content="JP STUDY" />
+    <meta
+      property="og:description"
+      content="형들 나 좀 도와줘 제발"
+    />
+    <meta property="og:type" content="website" />
   </head>
+
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
