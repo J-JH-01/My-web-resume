@@ -1,5 +1,10 @@
 import { useEffect, useState } from "react";
-import { Route, Routes, useLocation } from "react-router-dom";
+import {
+  Navigate,
+  Route,
+  Routes,
+  useLocation,
+} from "react-router-dom";
 
 import "./style/App.css";
 
@@ -21,7 +26,12 @@ import AdminStudyItemPage from "./pages/AdminStudyItemPage.jsx";
 
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  // 로그인 회원 정보
   const [loginMember, setLoginMember] = useState(null);
+
+  // /api/auth/me 확인이 끝났는지 여부
+  const [authLoading, setAuthLoading] = useState(true);
 
   const location = useLocation();
   const isAdminPage = location.pathname.startsWith("/admin");
@@ -44,10 +54,28 @@ function App() {
         }
       })
       .catch((error) => {
-        console.error(error);
+        console.error("로그인 상태 확인 실패:", error);
         setLoginMember(null);
+      })
+      .finally(() => {
+        setAuthLoading(false);
       });
   }, []);
+
+  // 로그인 필요한 페이지 보호
+  const ProtectedRoute = ({ children }) => {
+    // 세션 확인 중에는 아무것도 판단하지 않음
+    if (authLoading) {
+      return <div>로딩 중...</div>;
+    }
+
+    // 로그인 안 되어 있으면 로그인 페이지로 이동
+    if (!loginMember) {
+      return <Navigate to="/login" replace />;
+    }
+
+    return children;
+  };
 
   return (
     <div className="app">
@@ -56,41 +84,110 @@ function App() {
         onMenuClick={() => setIsMenuOpen((prev) => !prev)}
       />
 
-      <MenuDrawer isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
+      <MenuDrawer
+        isOpen={isMenuOpen}
+        onClose={() => setIsMenuOpen(false)}
+      />
 
       <main className={isAdminPage ? "app-main admin-app-main" : "app-main"}>
         <Routes>
+          {/* 공개 페이지 */}
           <Route path="/" element={<HomePage />} />
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/login" element={<LoginPage />} />
-          <Route
-              path="/admin/study-items"
-              element={<AdminStudyItemPage loginMember={loginMember} />}
-            />
 
-          <Route path="/hiragana" element={<KanaPage type="hiragana" />} />
-          <Route path="/katakana" element={<KanaPage type="katakana" />} />
+          <Route
+            path="/hiragana"
+            element={<KanaPage type="hiragana" />}
+          />
+
+          <Route
+            path="/katakana"
+            element={<KanaPage type="katakana" />}
+          />
+
+          {/* 로그인 필요 - 마이페이지 */}
           <Route
             path="/my-page"
-            element={<MyPage loginMember={loginMember} setLoginMember={setLoginMember} />}
-          />
-          <Route
-            path="/my-page/edit"
             element={
-              <MemberEditPage
-                loginMember={loginMember}
-                setLoginMember={setLoginMember}
-              />
+              <ProtectedRoute>
+                <MyPage
+                  loginMember={loginMember}
+                  setLoginMember={setLoginMember}
+                />
+              </ProtectedRoute>
             }
           />
 
-          <Route path="/words" element={<WordListPage />} />
-          <Route path="/words/:wordNo" element={<WordDetailPage />} />
+          <Route
+            path="/my-page/edit"
+            element={
+              <ProtectedRoute>
+                <MemberEditPage
+                  loginMember={loginMember}
+                  setLoginMember={setLoginMember}
+                />
+              </ProtectedRoute>
+            }
+          />
 
-          <Route path="/kanji" element={<KanjiListPage />} />
-          <Route path="/kanji/:kanjiNo" element={<KanjiDetailPage />} />
+          {/* 로그인 필요 - 단어 */}
+          <Route
+            path="/words"
+            element={
+              <ProtectedRoute>
+                <WordListPage />
+              </ProtectedRoute>
+            }
+          />
 
-          <Route path="/quiz" element={<QuizPage />} />
+          <Route
+            path="/words/:wordNo"
+            element={
+              <ProtectedRoute>
+                <WordDetailPage />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* 로그인 필요 - 한자 */}
+          <Route
+            path="/kanji"
+            element={
+              <ProtectedRoute>
+                <KanjiListPage />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/kanji/:kanjiNo"
+            element={
+              <ProtectedRoute>
+                <KanjiDetailPage />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* 로그인 필요 - 퀴즈 */}
+          <Route
+            path="/quiz"
+            element={
+              <ProtectedRoute>
+                <QuizPage />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* 관리자 */}
+          <Route
+            path="/admin/study-items"
+            element={
+              <ProtectedRoute>
+                <AdminStudyItemPage loginMember={loginMember} />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </main>
     </div>
