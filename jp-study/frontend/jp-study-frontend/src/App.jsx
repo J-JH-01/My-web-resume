@@ -24,6 +24,27 @@ import LoginPage from "./pages/LoginPage.jsx";
 import MemberEditPage from "./pages/MemberEditPage.jsx";
 import AdminStudyItemPage from "./pages/AdminStudyItemPage.jsx";
 
+
+// 로그인 필요한 페이지 보호
+function ProtectedRoute({
+  children,
+  loginMember,
+  authLoading,
+}) {
+  // 처음 앱 실행 시 세션 확인 중
+  if (authLoading) {
+    return <div>로딩 중...</div>;
+  }
+
+  // 로그인 안 되어 있으면 로그인 페이지로 이동
+  if (!loginMember) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return children;
+}
+
+
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -35,6 +56,7 @@ function App() {
 
   const location = useLocation();
   const isAdminPage = location.pathname.startsWith("/admin");
+
 
   useEffect(() => {
     fetch("/api/auth/me", {
@@ -62,20 +84,6 @@ function App() {
       });
   }, []);
 
-  // 로그인 필요한 페이지 보호
-  const ProtectedRoute = ({ children }) => {
-    // 세션 확인 중에는 아무것도 판단하지 않음
-    if (authLoading) {
-      return <div>로딩 중...</div>;
-    }
-
-    // 로그인 안 되어 있으면 로그인 페이지로 이동
-    if (!loginMember) {
-      return <Navigate to="/login" replace />;
-    }
-
-    return children;
-  };
 
   return (
     <div className="app">
@@ -89,7 +97,13 @@ function App() {
         onClose={() => setIsMenuOpen(false)}
       />
 
-      <main className={isAdminPage ? "app-main admin-app-main" : "app-main"}>
+      <main
+        className={
+          isAdminPage
+            ? "app-main admin-app-main"
+            : "app-main"
+        }
+      >
         <Routes>
           {/* 공개 페이지 */}
           <Route path="/" element={<HomePage />} />
@@ -106,11 +120,15 @@ function App() {
             element={<KanaPage type="katakana" />}
           />
 
+
           {/* 로그인 필요 - 마이페이지 */}
           <Route
             path="/my-page"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute
+                loginMember={loginMember}
+                authLoading={authLoading}
+              >
                 <MyPage
                   loginMember={loginMember}
                   setLoginMember={setLoginMember}
@@ -122,7 +140,10 @@ function App() {
           <Route
             path="/my-page/edit"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute
+                loginMember={loginMember}
+                authLoading={authLoading}
+              >
                 <MemberEditPage
                   loginMember={loginMember}
                   setLoginMember={setLoginMember}
@@ -131,11 +152,15 @@ function App() {
             }
           />
 
+
           {/* 로그인 필요 - 단어 */}
           <Route
             path="/words"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute
+                loginMember={loginMember}
+                authLoading={authLoading}
+              >
                 <WordListPage />
               </ProtectedRoute>
             }
@@ -144,17 +169,24 @@ function App() {
           <Route
             path="/words/:wordNo"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute
+                loginMember={loginMember}
+                authLoading={authLoading}
+              >
                 <WordDetailPage />
               </ProtectedRoute>
             }
           />
 
+
           {/* 로그인 필요 - 한자 */}
           <Route
             path="/kanji"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute
+                loginMember={loginMember}
+                authLoading={authLoading}
+              >
                 <KanjiListPage />
               </ProtectedRoute>
             }
@@ -163,28 +195,41 @@ function App() {
           <Route
             path="/kanji/:kanjiNo"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute
+                loginMember={loginMember}
+                authLoading={authLoading}
+              >
                 <KanjiDetailPage />
               </ProtectedRoute>
             }
           />
 
+
           {/* 로그인 필요 - 퀴즈 */}
           <Route
             path="/quiz"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute
+                loginMember={loginMember}
+                authLoading={authLoading}
+              >
                 <QuizPage />
               </ProtectedRoute>
             }
           />
 
+
           {/* 관리자 */}
           <Route
             path="/admin/study-items"
             element={
-              <ProtectedRoute>
-                <AdminStudyItemPage loginMember={loginMember} />
+              <ProtectedRoute
+                loginMember={loginMember}
+                authLoading={authLoading}
+              >
+                <AdminStudyItemPage
+                  loginMember={loginMember}
+                />
               </ProtectedRoute>
             }
           />
@@ -193,5 +238,6 @@ function App() {
     </div>
   );
 }
+
 
 export default App;
