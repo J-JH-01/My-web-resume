@@ -13,11 +13,15 @@ function QuizPage() {
   const [saving, setSaving] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
+  // 퀴즈 전체 결과 개수
   const [sessionResult, setSessionResult] = useState({
     KNOWN: 0,
     VAGUE: 0,
     UNKNOWN: 0,
   });
+
+  // 각 문제별 결과 기록
+  const [quizResults, setQuizResults] = useState([]);
 
   const currentQuiz = quizList[quizIndex];
 
@@ -27,11 +31,15 @@ function QuizPage() {
     setFlipped(false);
     setComplete(false);
     setQuizIndex(0);
+
     setSessionResult({
       KNOWN: 0,
       VAGUE: 0,
       UNKNOWN: 0,
     });
+
+    // 이전 퀴즈 결과 초기화
+    setQuizResults([]);
 
     fetch("/api/quiz?limit=10")
       .then((res) => {
@@ -88,10 +96,20 @@ function QuizPage() {
         throw new Error(text || "학습 상태 저장 실패");
       }
 
+      // 상태별 개수 증가
       setSessionResult((prev) => ({
         ...prev,
         [studyStatus]: prev[studyStatus] + 1,
       }));
+
+      // 현재 문제 + 사용자가 선택한 결과 저장
+      setQuizResults((prev) => [
+        ...prev,
+        {
+          ...currentQuiz,
+          studyStatus,
+        },
+      ]);
 
       setFlipped(false);
 
@@ -109,10 +127,27 @@ function QuizPage() {
     }
   };
 
+  const getStatusText = (studyStatus) => {
+    if (studyStatus === "KNOWN") return "맞춤";
+    if (studyStatus === "VAGUE") return "애매함";
+    if (studyStatus === "UNKNOWN") return "모름";
+
+    return "";
+  };
+
+  const getStatusClass = (studyStatus) => {
+    if (studyStatus === "KNOWN") return "known";
+    if (studyStatus === "VAGUE") return "vague";
+    if (studyStatus === "UNKNOWN") return "unknown";
+
+    return "";
+  };
+
   if (loading) {
     return (
       <div className="phone-page">
         <PageHeader title="퀴즈" />
+
         <main className="page-content">
           <p>퀴즈를 불러오는 중입니다...</p>
         </main>
@@ -124,8 +159,10 @@ function QuizPage() {
     return (
       <div className="phone-page">
         <PageHeader title="퀴즈" />
+
         <main className="page-content">
           <p>{errorMessage}</p>
+
           <button type="button" onClick={reloadQuiz}>
             다시 불러오기
           </button>
@@ -137,12 +174,14 @@ function QuizPage() {
   if (complete) {
     return (
       <div className="phone-page">
-        <PageHeader title="퀴즈" />
+        <PageHeader title="퀴즈 결과" />
 
         <main className="page-content">
           <section className="quiz-complete-card">
             <span>COMPLETE</span>
+
             <h2>퀴즈 완료</h2>
+
             <p>{quizList.length}개 문제를 모두 확인했습니다.</p>
 
             <div className="quiz-result-grid">
@@ -161,11 +200,84 @@ function QuizPage() {
                 <p>모름</p>
               </div>
             </div>
+          </section>
 
-            <button type="button" onClick={reloadQuiz}>
+          <section className="quiz-result-section">
+            <div className="quiz-result-title-row">
+              <h3>문제별 결과</h3>
+
+              <span>{quizResults.length}문제</span>
+            </div>
+
+            <div className="quiz-result-list">
+              {quizResults.map((result, index) => (
+                <article
+                  className={`quiz-result-item ${getStatusClass(
+                    result.studyStatus
+                  )}`}
+                  key={`${result.quizType}-${result.itemNo}-${index}`}
+                >
+                  <div className="quiz-result-item-top">
+                    <div>
+                      <span className="quiz-result-number">
+                        {index + 1}
+                      </span>
+
+                      <span className="quiz-result-type">
+                        {result.quizType === "KANJI" ? "KANJI" : "WORD"}
+                      </span>
+                    </div>
+
+                    <span
+                      className={`quiz-result-status ${getStatusClass(
+                        result.studyStatus
+                      )}`}
+                    >
+                      {getStatusText(result.studyStatus)}
+                    </span>
+                  </div>
+
+                  <div className="quiz-result-question">
+                    <strong>{result.questionText}</strong>
+
+                    {result.readingText && (
+                      <p className="quiz-result-reading">
+                        {result.readingText}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="quiz-result-answer">
+                    <span>정답</span>
+
+                    <strong>{result.answerText}</strong>
+
+                    {result.description && (
+                      <p>{result.description}</p>
+                    )}
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
+
+          <div className="quiz-result-actions">
+            <button
+              className="quiz-retry-button"
+              type="button"
+              onClick={reloadQuiz}
+            >
               새 문제 풀기
             </button>
-          </section>
+
+            <button
+              className="quiz-home-button"
+              type="button"
+              onClick={() => navigate("/")}
+            >
+              홈으로
+            </button>
+          </div>
         </main>
       </div>
     );
@@ -175,6 +287,7 @@ function QuizPage() {
     return (
       <div className="phone-page">
         <PageHeader title="퀴즈" />
+
         <main className="page-content">
           <p>퀴즈 데이터가 없습니다.</p>
         </main>
